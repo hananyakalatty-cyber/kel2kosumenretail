@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DailyStore</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
+<!-- Semua styling ada di file terpisah -->
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="ticker-wrap">
+  <div class="ticker" id="tickerEl"></div>
+</div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="#" class="logo" onclick="goPage('beranda');return false;">Daily<span class="dot-y">.</span><span class="dot-r">Store</span> </a>
+    <div class="search">
+      <input id="q" type="text" placeholder="lagi nyari apa hari ini?" />
+      <button onclick="doSearch()">🔍</button>
+    </div>
+    <div class="nav-icons">
+      <button class="nav-icon" onclick="openCart()" title="Keranjang">🛒<span class="dot" id="cartDot"></span></button>
+      <button class="nav-icon" onclick="goPage('favorit')" title="Favorit">❤️<span class="dot" id="favDot"></span></button>
+      <button class="nav-icon" id="acctNavBtn" onclick="goPage('akun')" title="Akun">👤<span class="dot" id="acctDot"></span></button>
+    </div>
+  </div>
+  <nav class="menu-bar" id="menuBar"></nav>
+</header>
+
+<!-- ===== HALAMAN: BERANDA ===== -->
+<section class="page" data-page="beranda">
+  <div class="hero">
+    <div class="hero-main">
+      <div class="hero-tag">✨ musim diskon 2025</div>
+      <h1>Belanja makin <span>hemat</span>, gaya makin <span>nendang</span> 🔥</h1>
+      <p>Ribuan lapak pilihan, kirim kilat ke seluruh Indonesia. Gaskeun sebelum stok abis!</p>
+      <a href="#" class="hero-cta" onclick="goPage('belanja');return false;">Mulai belanja →</a>
+    </div>
+    <div class="hero-side">
+      <div class="hero-mini a" onclick="goPage('belanja')">
+        <div>
+          <div class="mini-label">⚡ Flash Sale</div>
+          <h3>Diskon sampai 70%!</h3>
+          <p>Cuma hari ini, jangan sampai kehabisan.</p>
+        </div>
+        <div class="mini-arrow">Serbu sekarang →</div>
+      </div>
+      <div class="hero-mini b" onclick="goPage('belanja')">
+        <div>
+          <div class="mini-label">🆕 Baru masuk</div>
+          <h3>Produk minggu ini</h3>
+          <p>Jadi yang pertama nyobain, biar gak ketinggalan!</p>
+        </div>
+        <div class="mini-arrow">Eksplor →</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="strips">
+      <div class="strip"><span class="strip-icon">🚚</span><div><strong>Gratis ongkir</strong><span>min. belanja Rp 100rb</span></div></div>
+      <div class="strip"><span class="strip-icon">↩️</span><div><strong>Retur gampang</strong><span>7 hari, no ribet</span></div></div>
+      <div class="strip"><span class="strip-icon">🔒</span><div><strong>Bayar aman</strong><span>transaksi terlindungi</span></div></div>
+    </div>
+
+    <div class="sec-head">
+      <div class="sec-title">🗂️ Kategori favorit</div>
+      <a href="#" class="link-more" onclick="goPage('kategori');return false;">lihat semua →</a>
+    </div>
+    <div class="cat-grid" id="catGridHome" style="margin-bottom:2rem;"></div>
+
+    <div class="sec-head">
+      <div class="sec-title">🔥 Lagi hits</div>
+      <a href="#" class="link-more" onclick="goPage('belanja');return false;">lihat semua →</a>
+    </div>
+    <div class="prod-grid" id="prodGridHome"></div>
+  </div>
+</section>
+
+<!-- ===== HALAMAN: BELANJA ===== -->
+<section class="page" data-page="belanja">
+  <div class="wrap" style="padding-top:1.5rem;">
+    <div class="sec-head"><div class="sec-title">🛍️ Semua produk</div></div>
+    <div class="menu-bar" id="pillBar" style="padding:0 0 1rem;margin:0 0 1rem;border-bottom:2px solid var(--border);"></div>
+    <div class="cat-banner" id="catBanner" style="display:none;"></div>
+
+    <div class="sec-head">
+      <div class="sec-title" id="prodTitle">Semua produk</div>
+      <select id="sortSel" onchange="doSort()" style="font-size:13px;padding:6px 10px;border:2px solid var(--teks);border-radius:0;font-family:inherit;color:var(--teks);outline:none;background:var(--white);">
+        <option value="">urutkan</option>
+        <option value="low">harga: murah dulu</option>
+        <option value="high">harga: mahal dulu</option>
+        <option value="top">rating tertinggi</option>
+      </select>
+    </div>
+    <div class="prod-grid" id="prodGrid"></div>
+    <button class="load-more" id="loadBtn" onclick="loadMore()">muat lebih banyak ↓</button>
+  </div>
+</section>
+
+<!-- ===== HALAMAN: KATEGORI ===== -->
+<section class="page" data-page="kategori">
+  <div class="wrap" style="padding-top:1.5rem;">
+    <div class="sec-head"><div class="sec-title">🗂️ Semua kategori</div></div>
+    <div class="cat-grid" id="catGridFull"></div>
+  </div>
+</section>
+
+<!-- ===== HALAMAN: FAVORIT ===== -->
+<section class="page" data-page="favorit">
+  <div class="wrap" style="padding-top:1.5rem;">
+    <div class="sec-head"><div class="sec-title">❤️ Favorit kamu</div></div>
+    <div class="prod-grid" id="favGrid"></div>
+  </div>
+</section>
+
+<!-- ===== HALAMAN: AKUN ===== -->
+<section class="page" data-page="akun">
+  <div class="wrap" style="padding-top:1.5rem;max-width:640px;">
+    <div class="sec-head"><div class="sec-title">👤 Akun</div></div>
+    <div id="acctArea"></div>
+  </div>
+</section>
+
+<!-- ===== HALAMAN: TENTANG ===== -->
+<section class="page" data-page="tentang">
+  <div class="wrap" style="padding-top:1.5rem;">
+    <div class="about-hero">
+      <h2>Kenalan sama DailyStore<span style="color:var(--kuning)">.in</span> 🔥</h2>
+      <p>Kami bikin belanja online serasa jalan-jalan ke pasar malam favorit kamu — rame, seru, dan selalu ada yang baru tiap minggu.</p>
+    </div>
+    <div class="about-grid">
+      <div class="about-card"><span>🏪</span><h4>Siapa kami</h4><p>Lapak digital yang menghubungkan ribuan penjual lokal ke pembeli di seluruh Indonesia.</p></div>
+      <div class="about-card"><span>💼</span><h4>Karir</h4><p>Kami lagi cari orang-orang yang suka kerja cepat dan peduli sama pengalaman belanja.</p></div>
+      <div class="about-card"><span>📰</span><h4>Blog</h4><p>Tips belanja hemat, review produk, dan cerita dari penjual-penjual kami.</p></div>
+      <div class="about-card"><span>↩️</span><h4>Retur & refund</h4><p>Gak cocok? Balikin dalam 7 hari, uang kembali tanpa drama.</p></div>
+    </div>
+    <div class="contact-box">
+      <div>
+        <h4 style="font-family:'Archivo Black',sans-serif;font-size:14px;margin-bottom:4px;">Butuh bantuan?</h4>
+        <p style="font-size:12.5px;color:var(--muted);">Tim kami siap bantu tiap hari, jam 08.00–22.00 WIB.</p>
+      </div>
+      <a href="#">📞 0812-3456-7890</a>
+      <a href="#">✉️ halo@DailyStore</a>
+      <a href="#" onclick="toast('💬 Live chat segera hadir!');return false;">💬 Live chat</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <div class="f-logo">Daily<span class="dot-y">.</span>Store</div>
+      <p class="f-desc">Platform belanja yang rame, hemat, dan terpercaya. Yuk belanja setiap hari!</p>
+    </div>
+    <div class="f-col">
+      <h5>Tentang</h5>
+      <ul>
+        <li><a href="#" onclick="goPage('tentang');return false;">Siapa kami</a></li>
+        <li><a href="#" onclick="goPage('tentang');return false;">Karir</a></li>
+        <li><a href="#" onclick="goPage('tentang');return false;">Blog</a></li>
+      </ul>
+    </div>
+    <div class="f-col">
+      <h5>Bantuan</h5>
+      <ul>
+        <li><a href="#" onclick="goPage('belanja');return false;">Cara belanja</a></li>
+        <li><a href="#" onclick="goPage('tentang');return false;">Retur & refund</a></li>
+        <li><a href="#" onclick="goPage('tentang');return false;">FAQ</a></li>
+      </ul>
+    </div>
+    <div class="f-col">
+      <h5>Hubungi</h5>
+      <ul>
+        <li><a href="#">📞 0812-3456-7890</a></li>
+        <li><a href="#">✉️ halo@DailyStore</a></li>
+        <li><a href="#" onclick="toast('💬 Live chat segera hadir!');return false;">💬 Live chat</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="f-bottom">© 2025 DailyStore · dibuat dengan hati di Indonesia</div>
+</footer>
+
+<div class="overlay" id="ov" onclick="closeCart(event)">
+  <div class="drawer">
+    <div class="drawer-head">
+      <h2>Keranjang kamu 🛒</h2>
+      <button class="drawer-close" onclick="closeCart()">✕</button>
+    </div>
+    <div class="drawer-body" id="dBody"></div>
+    <div class="drawer-foot" id="dFoot" style="display:none">
+      <div class="total-row"><span>Total</span><span id="dTotal">Rp 0</span></div>
+      <div class="pay-methods" id="payMethods"></div>
+      <button class="btn-pay" onclick="checkout()">Bayar sekarang </button>
+    </div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts"></div>
+
+<!--
+  Urutan file JS PENTING karena saling terhubung (satu web, banyak file):
+  1. data.js      -> data produk/kategori/menu (dipakai semua file lain)
+  2. toast.js     -> notifikasi kecil (dipakai semua file lain)
+  3. nav.js       -> perpindahan halaman & menu (dipakai semua file lain)
+  4. products.js  -> render kartu produk, filter, sort, search
+  5. cart.js      -> keranjang belanja
+  6. wishlist.js  -> favorit
+  7. account.js   -> halaman akun (login tamu/admin, tambah/hapus produk)
+  8. main.js      -> menjalankan semuanya saat halaman dibuka
+-->
+<script src="js/data.js"></script>
+<script src="js/toast.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/wishlist.js"></script>
+<script src="js/account.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
